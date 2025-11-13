@@ -23,7 +23,7 @@ public class MapRepositoryImpl implements MapRepository {
     public Map save(Map map) {
         MapEntity entity = new MapEntity();
 
-        entity.setUserId(map.getUserId());
+        entity.setId(map.getUserId());
         entity.setName(map.getName());
         entity.setDescription(map.getDescription());
         entity.setLocation(map.getLocation());
@@ -54,7 +54,7 @@ public class MapRepositoryImpl implements MapRepository {
     private Map mapEntityToDomain(MapEntity entity) {
         return new Map(
             entity.getId(),
-            entity.getUserId(),
+            entity.getId(),
             entity.getName(),
             entity.getDescription(),
             entity.getLocation(),
