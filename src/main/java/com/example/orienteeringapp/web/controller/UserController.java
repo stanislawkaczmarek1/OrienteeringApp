@@ -1,14 +1,20 @@
 package com.example.orienteeringapp.web.controller;
 
+import com.example.orienteeringapp.application.dto.GetUserResponseDto;
 import com.example.orienteeringapp.application.service.UserService;
 import com.example.orienteeringapp.application.dto.CreateUserDto;
 import com.example.orienteeringapp.application.dto.CreateUserResponseDto;
+<<<<<<< HEAD
 import com.example.orienteeringapp.application.dto.UserDto;
+=======
+import org.springframework.http.HttpStatus;
+>>>>>>> 8dabfd2 (added get user endpoint, global exeception handler, changed controller and service)
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
@@ -17,17 +23,19 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public CreateUserResponseDto createUser(@RequestBody CreateUserDto dto) {
-        return userService.createUser(dto);
+    @PostMapping("/user")
+    public ResponseEntity<CreateUserResponseDto> createUser(@RequestBody CreateUserDto dto) {
+        CreateUserResponseDto responseDto = userService.createUser(dto);
+        return  new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
-        return userService.getUser(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/user/{id}")
+    public ResponseEntity<GetUserResponseDto> getUser(@PathVariable Long id) {
+        GetUserResponseDto responseDto = userService.getUser(id);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {

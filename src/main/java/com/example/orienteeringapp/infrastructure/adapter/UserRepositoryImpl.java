@@ -6,6 +6,7 @@ import com.example.orienteeringapp.infrastructure.entity.UserEntity;
 import com.example.orienteeringapp.infrastructure.repository.JpaUserRepository;
 import org.springframework.stereotype.Component;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Component
@@ -34,8 +35,17 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> findById(Long id) {
-        return jpaUserRepository.findById(id)
-                .map(this::userEntityToDomain);
+        Optional<UserEntity> entityOptional = jpaUserRepository.findById(id);
+
+        return entityOptional.map(entity -> new User(entity.getId(),
+                entity.getUsername(),
+                entity.getFullName(),
+                entity.getEmail(),
+                entity.getPhoneNumber(),
+                entity.getPasswordHash(),
+                entity.isPrivate(),
+                entity.getCreatedAt())
+        );
     }
 
     @Override
