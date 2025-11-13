@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationResponseDto {
-    private String token;
-    private String username;
-    private String refreshToken;
+public class GoogleLoginRequestDto {
+    private String idToken;
 }

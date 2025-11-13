@@ -6,7 +6,6 @@ import com.example.orienteeringapp.infrastructure.entity.UserEntity;
 import com.example.orienteeringapp.infrastructure.repository.JpaUserRepository;
 import org.springframework.stereotype.Component;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Component
@@ -46,6 +45,18 @@ public class UserRepositoryImpl implements UserRepository {
                 entity.isPrivate(),
                 entity.getCreatedAt())
         );
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return jpaUserRepository.findByUsername(username)
+                .map(this::userEntityToDomain);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return jpaUserRepository.findByEmail(email)
+                .map(this::userEntityToDomain);
     }
 
     @Override

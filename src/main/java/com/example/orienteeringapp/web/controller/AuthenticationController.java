@@ -1,8 +1,6 @@
 package com.example.orienteeringapp.web.controller;
 
-import com.example.orienteeringapp.application.dto.AuthenticationResponseDto;
-import com.example.orienteeringapp.application.dto.CreateUserDto;
-import com.example.orienteeringapp.application.dto.LoginRequestDto;
+import com.example.orienteeringapp.application.dto.*;
 import com.example.orienteeringapp.application.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +25,15 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponseDto> login(@RequestBody LoginRequestDto request) {
         return ResponseEntity.ok(authenticationService.login(request));
+    }
+
+    @PostMapping("/login/google")
+    public ResponseEntity<AuthenticationResponseDto> loginWithGoogle(@RequestBody GoogleLoginRequestDto request) {
+        return ResponseEntity.ok(authenticationService.loginWithGoogle(request.getIdToken()));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<RefreshTokenResponseDto> refreshToken(@RequestBody RefreshTokenRequestDto request) {
+        return ResponseEntity.ok(authenticationService.refreshAccessToken(request.getRefreshToken()));
     }
 }
