@@ -4,11 +4,7 @@ import com.example.orienteeringapp.application.dto.GetUserResponseDto;
 import com.example.orienteeringapp.application.service.UserService;
 import com.example.orienteeringapp.application.dto.CreateUserDto;
 import com.example.orienteeringapp.application.dto.CreateUserResponseDto;
-<<<<<<< HEAD
-import com.example.orienteeringapp.application.dto.UserDto;
-=======
 import org.springframework.http.HttpStatus;
->>>>>>> 8dabfd2 (added get user endpoint, global exeception handler, changed controller and service)
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
