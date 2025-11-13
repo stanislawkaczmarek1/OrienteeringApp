@@ -29,19 +29,30 @@ public class UserRepositoryImpl implements UserRepository {
         entity.setPrivate(user.isPrivate());
 
         UserEntity saved = jpaUserRepository.save(entity);
-        return new User(saved.getId(), saved.getUsername(), saved.getFullName(),
-                saved.getEmail(), saved.getPhoneNumber(),
-                saved.getPasswordHash(), saved.isPrivate(), saved.getCreatedAt());
+        return userEntityToDomain(saved);
     }
 
     @Override
     public Optional<User> findById(Long id) {
-        return Optional.empty();
-    }//todo
+        return jpaUserRepository.findById(id)
+                .map(this::userEntityToDomain);
+    }
 
     @Override
     public void delete(Long id) {
+        jpaUserRepository.deleteById(id);
+    }
 
-    }//todo
+    private User userEntityToDomain(UserEntity entity) {
+        return new User(
+                entity.getId(),
+                entity.getUsername(),
+                entity.getFullName(),
+                entity.getEmail(),
+                entity.getPhoneNumber(),
+                entity.getPasswordHash(),
+                entity.isPrivate(),
+                entity.getCreatedAt()
+        );
+    }
 }
-
