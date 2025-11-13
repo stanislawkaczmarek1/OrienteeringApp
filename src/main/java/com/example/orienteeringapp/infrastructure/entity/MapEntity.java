@@ -1,6 +1,7 @@
 package com.example.orienteeringapp.infrastructure.entity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,7 +38,7 @@ public class MapEntity {
     private String location;
 
     @Type(JsonBinaryType.class)
-    @Column(name = "map_data", columnDefinition = "jsonb", nullable = false)
+    @Column(name = "map_data", columnDefinition = "TEXT", nullable = false)
     private Map<String, Object> mapData = new HashMap<>();
 
     @Column(name = "created_at", updatable = false)

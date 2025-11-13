@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -15,5 +14,5 @@ public class CreateMapDto {
     private String name;
     private String description;
     private String location;
-    private Map<String, Object> mapData = new HashMap<>();
+    private java.util.Map<String, Object> mapData = new HashMap<>();
 }

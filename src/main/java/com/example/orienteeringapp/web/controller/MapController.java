@@ -4,6 +4,7 @@ import com.example.orienteeringapp.application.service.MapService;
 import com.example.orienteeringapp.application.dto.CreateMapDto;
 import com.example.orienteeringapp.application.dto.CreateMapResponseDto;
 import com.example.orienteeringapp.application.dto.MapDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/maps")
+@Tag(name = "Maps")
 public class MapController {
 
     private final MapService mapService;

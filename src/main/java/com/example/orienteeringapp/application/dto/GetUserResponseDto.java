@@ -1,8 +1,16 @@
 package com.example.orienteeringapp.application.dto;
 
-public record GetUserResponseDto(String username,
-                                 String fullName,
-                                 String email,
-                                 String phoneNumber,
-                                 boolean isPrivate) {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class GetUserResponseDto {
+    private String username;
+    private String fullName;
+    private String email;
+    private String phoneNumber;
+    private boolean isPrivate;
 }

@@ -4,6 +4,7 @@ import com.example.orienteeringapp.application.dto.GetUserResponseDto;
 import com.example.orienteeringapp.application.service.UserService;
 import com.example.orienteeringapp.application.dto.CreateUserDto;
 import com.example.orienteeringapp.application.dto.CreateUserResponseDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Users")
 public class UserController {
 
     private final UserService userService;
