@@ -3,8 +3,10 @@ package com.example.orienteeringapp.application.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -14,5 +16,21 @@ public class CreateMapDto {
     private String name;
     private String description;
     private String location;
-    private java.util.Map<String, Object> mapData = new HashMap<>();
+    private MapData mapData = new MapData();
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MapData {
+        private List<ControlPoint> controlPoints = new ArrayList<>();
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ControlPoint {
+        private Double latitude;
+        private Double longitude;
+        private Integer id;
+    }
 }

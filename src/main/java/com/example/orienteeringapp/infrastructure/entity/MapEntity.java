@@ -8,8 +8,9 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "maps")
@@ -38,7 +39,7 @@ public class MapEntity {
 
     @Type(JsonBinaryType.class)
     @Column(name = "map_data", columnDefinition = "TEXT", nullable = false)
-    private Map<String, Object> mapData = new HashMap<>();
+    private MapData mapData = new MapData();
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -47,6 +48,50 @@ public class MapEntity {
     public void prePersist() {
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
+        }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class MapData {
+        private List<ControlPoint> controlPoints = new ArrayList<>();
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            MapData mapData = (MapData) o;
+            return Objects.equals(controlPoints, mapData.controlPoints);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(controlPoints);
+        }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class ControlPoint {
+        private Double latitude;
+        private Double longitude;
+        private Integer id;
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ControlPoint that = (ControlPoint) o;
+            return Objects.equals(latitude, that.latitude) &&
+                   Objects.equals(longitude, that.longitude) &&
+                   Objects.equals(id, that.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(latitude, longitude, id);
         }
     }
 }

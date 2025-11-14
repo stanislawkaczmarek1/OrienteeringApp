@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -15,6 +16,22 @@ public class MapDto {
     private String name;
     private String description;
     private String location;
-    private java.util.Map<String, Object> mapData;
+    private MapData mapData;
     private LocalDateTime createdAt;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MapData {
+        private List<ControlPoint> controlPoints;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ControlPoint {
+        private Double latitude;
+        private Double longitude;
+        private Integer id;
+    }
 }
