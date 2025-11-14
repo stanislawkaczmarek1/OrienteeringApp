@@ -1,6 +1,8 @@
 package com.example.orienteeringapp.application.service;
 
 import com.example.orienteeringapp.application.dto.*;
+import com.example.orienteeringapp.application.exception.InvalidTokenException;
+import com.example.orienteeringapp.application.exception.TokenExpiredException;
 import com.example.orienteeringapp.domain.model.RefreshToken;
 import com.example.orienteeringapp.domain.model.User;
 import com.example.orienteeringapp.domain.repository.UserRepository;
@@ -60,8 +62,8 @@ public class AuthenticationService {
                 null
         );
 
-        userRepository.save(user);
-        return generateTokens(user);
+        User savedUser = userRepository.save(user);
+        return generateTokens(savedUser);
     }
 
     public AuthenticationResponseDto login(LoginRequestDto request) {
@@ -82,7 +84,7 @@ public class AuthenticationService {
         var payload = googleTokenVerifier.verifyToken(idTokenString);
 
         if (payload == null || !Boolean.TRUE.equals(payload.getEmailVerified())) {
-            throw new RuntimeException("Invalid Google ID token or email not verified");
+            throw new InvalidTokenException("Invalid Google ID token or email not verified");
         }
 
         String email = payload.getEmail();
@@ -109,7 +111,7 @@ public class AuthenticationService {
     public RefreshTokenResponseDto refreshAccessToken(String refreshTokenValue) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenValue)
                 .map(this::verifyExpiration)
-                .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
+                .orElseThrow(() -> new InvalidTokenException("Invalid refresh token"));
 
         User user = userRepository.findById(refreshToken.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -143,7 +145,7 @@ public class AuthenticationService {
     private RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiryDate().isBefore(Instant.now())) {
             refreshTokenRepository.deleteByUserId(token.getUserId());
-            throw new RuntimeException("Refresh token expired");
+            throw new TokenExpiredException("Refresh token has expired");
         }
         return token;
     }

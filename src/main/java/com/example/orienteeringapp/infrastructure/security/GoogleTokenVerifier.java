@@ -1,5 +1,6 @@
 package com.example.orienteeringapp.infrastructure.security;
 
+import com.example.orienteeringapp.application.exception.InvalidTokenException;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -31,10 +32,12 @@ public class GoogleTokenVerifier {
             if (idToken != null) {
                 return idToken.getPayload();
             } else {
-                throw new RuntimeException("Invalid ID token");
+                throw new InvalidTokenException("Invalid Google ID token");
             }
+        } catch (InvalidTokenException e) {
+            throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Token verification failed", e);
+            throw new InvalidTokenException("Token verification failed: " + e.getMessage());
         }
     }
 }
