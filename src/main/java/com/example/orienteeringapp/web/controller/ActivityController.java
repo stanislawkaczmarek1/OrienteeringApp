@@ -5,6 +5,7 @@ import com.example.orienteeringapp.application.dto.CreateActivityDto;
 import com.example.orienteeringapp.application.dto.CreateActivityResponseDto;
 import com.example.orienteeringapp.application.service.ActivityService;
 import com.example.orienteeringapp.infrastructure.security.annotation.IsActivityOwner;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/activities")
 @Tag(name = "Activities")
+@SecurityRequirement(name = "Bearer Authentication")
 @PreAuthorize("isAuthenticated()")
 public class ActivityController {
 

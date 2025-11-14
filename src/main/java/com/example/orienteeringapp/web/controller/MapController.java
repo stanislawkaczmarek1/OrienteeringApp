@@ -5,6 +5,7 @@ import com.example.orienteeringapp.application.dto.CreateMapDto;
 import com.example.orienteeringapp.application.dto.CreateMapResponseDto;
 import com.example.orienteeringapp.application.dto.MapDto;
 import com.example.orienteeringapp.infrastructure.security.annotation.IsMapOwner;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/maps")
 @Tag(name = "Maps")
+@SecurityRequirement(name = "Bearer Authentication")
 @PreAuthorize("isAuthenticated()")
 public class MapController {
 

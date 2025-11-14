@@ -35,4 +35,10 @@ public class OwnershipChecker {
                 .map(user -> user.getUsername().equals(username))
                 .orElse(false);
     }
+
+    public boolean isCurrentUser(Long userId, String username) {
+        return userRepository.findById(userId)
+                .map(user -> user.getUsername().equals(username))
+                .orElse(false);
+    }
 }

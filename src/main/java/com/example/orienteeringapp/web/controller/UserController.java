@@ -4,6 +4,8 @@ import com.example.orienteeringapp.application.dto.GetUserResponseDto;
 import com.example.orienteeringapp.application.service.UserService;
 import com.example.orienteeringapp.application.dto.CreateUserDto;
 import com.example.orienteeringapp.application.dto.CreateUserResponseDto;
+import com.example.orienteeringapp.infrastructure.security.annotation.IsCurrentUser;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/user")
+    @Deprecated
     public ResponseEntity<CreateUserResponseDto> createUser(@RequestBody CreateUserDto dto) {
         CreateUserResponseDto responseDto = userService.createUser(dto);
         return  new ResponseEntity<>(responseDto, HttpStatus.CREATED);
@@ -29,6 +32,7 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<GetUserResponseDto> getUser(@PathVariable Long id) {
         GetUserResponseDto responseDto = userService.getUser(id);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -36,6 +40,8 @@ public class UserController {
 
 
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @IsCurrentUser
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
