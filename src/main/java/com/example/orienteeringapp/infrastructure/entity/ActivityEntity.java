@@ -1,6 +1,5 @@
 package com.example.orienteeringapp.infrastructure.entity;
 
-import io.hypersistence.utils.hibernate.type.interval.PostgreSQLIntervalType;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,6 +12,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "activities")
@@ -31,7 +31,7 @@ public class ActivityEntity {
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "map_id", nullable = false)
+    @JoinColumn(name = "map_id")
     private MapEntity map;
 
     @Column(name = "title", length = 100)
@@ -40,15 +40,14 @@ public class ActivityEntity {
     @Column(name = "start_time")
     private LocalDateTime startTime;
 
-    @Type(PostgreSQLIntervalType.class)
-    @Column(name = "duration", columnDefinition = "interval")
-    private Duration duration;
+    @Column(name = "duration_ms")
+    private Long durationMs;
 
     @Column(name = "distance", precision = 6, scale = 2)
     private BigDecimal distance;
 
     @Type(JsonBinaryType.class)
-    @Column(name = "path_data", columnDefinition = "jsonb", nullable = false)
+    @Column(name = "path_data", columnDefinition = "TEXT", nullable = false)
     private List<PathPointData> pathData = new ArrayList<>();
 
     @Column(name = "created_at", updatable = false)
@@ -61,6 +60,14 @@ public class ActivityEntity {
         }
     }
 
+    public Duration getDuration() {
+        return durationMs != null ? Duration.ofMillis(durationMs) : null;
+    }
+
+    public void setDuration(Duration duration) {
+        this.durationMs = duration != null ? duration.toMillis() : null;
+    }
+
     @Getter
     @Setter
     @NoArgsConstructor
@@ -68,5 +75,20 @@ public class ActivityEntity {
         private Double latitude;
         private Double longitude;
         private LocalDateTime timestamp;
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            PathPointData that = (PathPointData) o;
+            return Objects.equals(latitude, that.latitude) &&
+                   Objects.equals(longitude, that.longitude) &&
+                   Objects.equals(timestamp, that.timestamp);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(latitude, longitude, timestamp);
+        }
     }
 }
