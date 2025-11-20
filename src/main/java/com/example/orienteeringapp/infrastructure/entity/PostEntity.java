@@ -1,0 +1,56 @@
+package com.example.orienteeringapp.infrastructure.entity;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "posts")
+@Getter
+@Setter
+@NoArgsConstructor
+public class PostEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
+    @Column(name = "content", columnDefinition = "TEXT")
+    private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "map_id")
+    private MapEntity map;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "activity_id")
+    private ActivityEntity activity;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "visibility", nullable = false)
+    private Visibility visibility = Visibility.public_;
+
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
+
+    public enum Visibility {
+        public_,
+        followers_,
+        private_
+    }
+}

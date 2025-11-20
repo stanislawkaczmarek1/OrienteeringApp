@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 @Tag(name = "Users")
 public class UserController {
 
@@ -23,7 +23,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/user")
+    @PostMapping
     @Deprecated
     public ResponseEntity<CreateUserResponseDto> createUser(@RequestBody CreateUserDto dto) {
         CreateUserResponseDto responseDto = userService.createUser(dto);
@@ -31,7 +31,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/{id}")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<GetUserResponseDto> getUser(@PathVariable Long id) {
         GetUserResponseDto responseDto = userService.getUser(id);
