@@ -1,19 +1,19 @@
-package com.example.orienteeringapp.domain.model;
+package com.example.orienteeringapp.application.dto;
 
 import com.example.orienteeringapp.domain.model.enums.PostVisibility;
+
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
-@Getter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
-public class Post {
+public class CreatePostDto {
     private Long id;
     private Long userId;
     private String content;
     private Long mapId;
     private Long activityId;
     private PostVisibility visibility;
-    private LocalDateTime createdAt;
 }

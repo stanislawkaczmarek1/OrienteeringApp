@@ -1,6 +1,6 @@
 package com.example.orienteeringapp.domain.model.enums;
 
-public enum Visibility {
+public enum PostVisibility {
     PUBLIC,
     FOLLOWERS,
     PRIVATE

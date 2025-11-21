@@ -1,5 +1,6 @@
 package com.example.orienteeringapp.infrastructure.entity;
 
+import com.example.orienteeringapp.domain.model.enums.FollowRequestStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +33,7 @@ public class FollowRequestEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private Status status = Status.pending;
+    private FollowRequestStatus status = FollowRequestStatus.PENDING;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -42,12 +43,6 @@ public class FollowRequestEntity {
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
         }
-    }
-
-    public enum Status {
-        pending,
-        accepted,
-        rejected
     }
 
 }

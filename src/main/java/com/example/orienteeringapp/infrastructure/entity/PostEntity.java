@@ -1,5 +1,6 @@
 package com.example.orienteeringapp.infrastructure.entity;
 
+import com.example.orienteeringapp.domain.model.enums.PostVisibility;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,7 +42,7 @@ public class PostEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "visibility", nullable = false)
-    private Visibility visibility = Visibility.public_;
+    private PostVisibility visibility = PostVisibility.PUBLIC;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -51,11 +52,5 @@ public class PostEntity {
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
         }
-    }
-
-    public enum Visibility {
-        public_,
-        followers_,
-        private_
     }
 }
