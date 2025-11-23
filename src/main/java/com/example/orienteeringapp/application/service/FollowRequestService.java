@@ -5,8 +5,9 @@ import com.example.orienteeringapp.application.dto.CreateFollowRequestResponseDt
 import com.example.orienteeringapp.domain.model.FollowRequest;
 import com.example.orienteeringapp.domain.model.enums.FollowRequestStatus;
 import com.example.orienteeringapp.domain.repository.FollowRequestRepository;
+import org.springframework.stereotype.Service;
 
-
+@Service
 public class FollowRequestService {
     private final FollowRequestRepository repository;
 

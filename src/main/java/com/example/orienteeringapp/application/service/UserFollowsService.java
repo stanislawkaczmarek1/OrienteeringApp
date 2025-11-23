@@ -4,7 +4,9 @@ import com.example.orienteeringapp.application.dto.CreateUserFollowsDto;
 import com.example.orienteeringapp.application.dto.CreateUserFollowsResponseDto;
 import com.example.orienteeringapp.domain.model.UserFollows;
 import com.example.orienteeringapp.domain.repository.UserFollowsRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserFollowsService {
     private final UserFollowsRepository repository;
 

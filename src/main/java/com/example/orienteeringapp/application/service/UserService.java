@@ -45,6 +45,21 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
 
         return new GetUserResponseDto(
+                user.getId(),
+                user.getUsername(),
+                user.getFullName(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                user.isPrivate()
+        );
+    }
+
+    public GetUserResponseDto getCurrentUser(String username) {
+        User user = repository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
+
+        return new GetUserResponseDto(
+                user.getId(),
                 user.getUsername(),
                 user.getFullName(),
                 user.getEmail(),

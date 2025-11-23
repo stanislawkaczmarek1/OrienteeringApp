@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -29,6 +31,14 @@ public class UserController {
         CreateUserResponseDto responseDto = userService.createUser(dto);
         return  new ResponseEntity<>(responseDto, HttpStatus.CREATED);
 
+    }
+
+    @GetMapping("/me")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<GetUserResponseDto> getCurrentUser(Authentication authentication) {
+        GetUserResponseDto responseDto = userService.getCurrentUser(authentication.getName());
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
