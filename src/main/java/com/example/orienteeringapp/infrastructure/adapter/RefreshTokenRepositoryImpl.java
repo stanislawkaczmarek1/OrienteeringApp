@@ -42,9 +42,20 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
     }
 
     @Override
+    public Optional<RefreshToken> findByTokenWithLock(String token) {
+        return jpaRefreshTokenRepository.findByTokenWithLock(token)
+                .map(this::toDomain);
+    }
+
+    @Override
     public void deleteByUserId(Long userId) {
         jpaUserRepository.findById(userId)
                 .ifPresent(jpaRefreshTokenRepository::deleteByUser);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        jpaRefreshTokenRepository.deleteById(id);
     }
 
     private RefreshTokenEntity toEntity(RefreshToken token, UserEntity user) {

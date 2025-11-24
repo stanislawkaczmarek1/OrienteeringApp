@@ -13,6 +13,7 @@ import com.example.orienteeringapp.infrastructure.security.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.Instant;
@@ -108,8 +109,9 @@ public class AuthenticationService {
         return generateTokens(user);
     }
 
+    @Transactional
     public RefreshTokenResponseDto refreshAccessToken(String refreshTokenValue) {
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenValue)
+        RefreshToken refreshToken = refreshTokenRepository.findByTokenWithLock(refreshTokenValue)
                 .map(this::verifyExpiration)
                 .orElseThrow(() -> new InvalidTokenException("Invalid refresh token"));
 
@@ -118,8 +120,10 @@ public class AuthenticationService {
 
         String newAccessToken = jwtService.generateToken(user.getUsername());
 
+        refreshTokenRepository.deleteById(refreshToken.getId());
+
         RefreshToken newRefreshToken = new RefreshToken(
-                refreshToken.getId(),
+                null,
                 refreshToken.getUserId(),
                 UUID.randomUUID().toString(),
                 Instant.now().plusMillis(refreshTokenDurationMs)
@@ -129,7 +133,10 @@ public class AuthenticationService {
         return new RefreshTokenResponseDto(newAccessToken, newRefreshToken.getToken());
     }
 
-    private AuthenticationResponseDto generateTokens(User user) {
+    @Transactional
+    protected AuthenticationResponseDto generateTokens(User user) {
+        refreshTokenRepository.deleteByUserId(user.getId());
+
         String jwtToken = jwtService.generateToken(user.getUsername());
         RefreshToken refreshToken = new RefreshToken(
                 null,
