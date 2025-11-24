@@ -49,6 +49,7 @@ public class AuthenticationService {
         this.refreshTokenDurationMs = refreshTokenDurationMs;
     }
 
+    @Transactional
     public AuthenticationResponseDto register(CreateUserDto request) {
         String hashedPassword = passwordHasher.hash(request.getPassword());
 
@@ -67,6 +68,7 @@ public class AuthenticationService {
         return generateTokens(savedUser);
     }
 
+    @Transactional
     public AuthenticationResponseDto login(LoginRequestDto request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -81,6 +83,7 @@ public class AuthenticationService {
         return generateTokens(user);
     }
 
+    @Transactional
     public AuthenticationResponseDto loginWithGoogle(String idTokenString) {
         var payload = googleTokenVerifier.verifyToken(idTokenString);
 
