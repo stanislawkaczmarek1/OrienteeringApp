@@ -87,12 +87,18 @@ public class UserService {
 
         String passwordHash = existingUser.getPasswordHash();
         if (dto.getNewPassword() != null && !dto.getNewPassword().isEmpty()) {
-            if (dto.getCurrentPassword() == null || dto.getCurrentPassword().isEmpty()) {
-                throw new IllegalArgumentException("Current password is required to change password");
+            boolean hasExistingPassword = existingUser.getPasswordHash() != null
+                    && !existingUser.getPasswordHash().isEmpty();
+
+            if (hasExistingPassword) {
+                if (dto.getCurrentPassword() == null || dto.getCurrentPassword().isEmpty()) {
+                    throw new IllegalArgumentException("Current password is required to change password");
+                }
+                if (!passwordHasher.verify(dto.getCurrentPassword(), existingUser.getPasswordHash())) {
+                    throw new IllegalArgumentException("Current password is incorrect");
+                }
             }
-            if (!passwordHasher.verify(dto.getCurrentPassword(), existingUser.getPasswordHash())) {
-                throw new IllegalArgumentException("Current password is incorrect");
-            }
+
             passwordHash = passwordHasher.hash(dto.getNewPassword());
         }
 
