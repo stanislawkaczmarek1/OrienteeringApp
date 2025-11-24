@@ -4,6 +4,7 @@ import com.example.orienteeringapp.application.dto.GetUserResponseDto;
 import com.example.orienteeringapp.application.service.UserService;
 import com.example.orienteeringapp.application.dto.CreateUserDto;
 import com.example.orienteeringapp.application.dto.CreateUserResponseDto;
+import com.example.orienteeringapp.application.dto.UpdateUserDto;
 import com.example.orienteeringapp.infrastructure.security.annotation.IsCurrentUser;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -48,6 +49,16 @@ public class UserController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @PatchMapping("/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @IsCurrentUser
+    public ResponseEntity<GetUserResponseDto> updateUser(
+            @PathVariable Long id,
+            @RequestBody UpdateUserDto dto
+    ) {
+        GetUserResponseDto responseDto = userService.updateUser(id, dto);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
 
     @DeleteMapping("/{id}")
     @SecurityRequirement(name = "Bearer Authentication")

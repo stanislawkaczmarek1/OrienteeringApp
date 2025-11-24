@@ -3,6 +3,7 @@ package com.example.orienteeringapp.application.service;
 import com.example.orienteeringapp.application.dto.CreateUserDto;
 import com.example.orienteeringapp.application.dto.CreateUserResponseDto;
 import com.example.orienteeringapp.application.dto.GetUserResponseDto;
+import com.example.orienteeringapp.application.dto.UpdateUserDto;
 import com.example.orienteeringapp.application.dto.UserDto;
 import com.example.orienteeringapp.application.exception.UserNotFoundException;
 import com.example.orienteeringapp.domain.model.User;
@@ -56,7 +57,7 @@ public class UserService {
 
     public GetUserResponseDto getCurrentUser(String username) {
         User user = repository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + username));
 
         return new GetUserResponseDto(
                 user.getId(),
@@ -65,6 +66,56 @@ public class UserService {
                 user.getEmail(),
                 user.getPhoneNumber(),
                 user.isPrivate()
+        );
+    }
+
+    public GetUserResponseDto updateUser(Long id, UpdateUserDto dto) {
+        User existingUser = repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        if (dto.getUsername() != null && !dto.getUsername().equals(existingUser.getUsername())) {
+            repository.findByUsername(dto.getUsername()).ifPresent(user -> {
+                throw new IllegalArgumentException("Username already exists");
+            });
+        }
+
+        if (dto.getEmail() != null && !dto.getEmail().equals(existingUser.getEmail())) {
+            repository.findByEmail(dto.getEmail()).ifPresent(user -> {
+                throw new IllegalArgumentException("Email already exists");
+            });
+        }
+
+        String passwordHash = existingUser.getPasswordHash();
+        if (dto.getNewPassword() != null && !dto.getNewPassword().isEmpty()) {
+            if (dto.getCurrentPassword() == null || dto.getCurrentPassword().isEmpty()) {
+                throw new IllegalArgumentException("Current password is required to change password");
+            }
+            if (!passwordHasher.verify(dto.getCurrentPassword(), existingUser.getPasswordHash())) {
+                throw new IllegalArgumentException("Current password is incorrect");
+            }
+            passwordHash = passwordHasher.hash(dto.getNewPassword());
+        }
+
+        User updatedUser = new User(
+                existingUser.getId(),
+                dto.getUsername() != null ? dto.getUsername() : existingUser.getUsername(),
+                dto.getFullName() != null ? dto.getFullName() : existingUser.getFullName(),
+                dto.getEmail() != null ? dto.getEmail() : existingUser.getEmail(),
+                dto.getPhoneNumber() != null ? dto.getPhoneNumber() : existingUser.getPhoneNumber(),
+                passwordHash,
+                dto.getIsPrivate() != null ? dto.getIsPrivate() : existingUser.isPrivate(),
+                existingUser.getCreatedAt()
+        );
+
+        User updated = repository.update(updatedUser);
+
+        return new GetUserResponseDto(
+                updated.getId(),
+                updated.getUsername(),
+                updated.getFullName(),
+                updated.getEmail(),
+                updated.getPhoneNumber(),
+                updated.isPrivate()
         );
     }
 

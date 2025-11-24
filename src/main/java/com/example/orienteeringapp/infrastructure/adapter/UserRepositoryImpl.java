@@ -33,6 +33,22 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public User update(User user) {
+        UserEntity entity = jpaUserRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        entity.setUsername(user.getUsername());
+        entity.setFullName(user.getFullName());
+        entity.setEmail(user.getEmail());
+        entity.setPhoneNumber(user.getPhoneNumber());
+        entity.setPasswordHash(user.getPasswordHash());
+        entity.setPrivate(user.isPrivate());
+
+        UserEntity saved = jpaUserRepository.save(entity);
+        return userEntityToDomain(saved);
+    }
+
+    @Override
     public Optional<User> findById(Long id) {
         Optional<UserEntity> entityOptional = jpaUserRepository.findById(id);
 
