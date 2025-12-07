@@ -1,29 +1,24 @@
-package com.example.orienteeringapp.web.controller;
-
+package com.example.orienteeringapp.web.controller.base;
 
 import com.example.orienteeringapp.application.dto.CreatePostDto;
 import com.example.orienteeringapp.application.dto.CreatePostResponseDto;
 import com.example.orienteeringapp.application.service.PostService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/posts")
-@Tag(name = "Posts")
-public class PostController {
-    private final PostService postService;
+public abstract class BasePostController {
 
-    public PostController(PostService postService) {
+    protected final PostService postService;
+
+    protected BasePostController(PostService postService) {
         this.postService = postService;
     }
 
     @PostMapping
-    public ResponseEntity<CreatePostResponseDto> createUser(@RequestBody CreatePostDto dto) {
+    public ResponseEntity<CreatePostResponseDto> createPost(@RequestBody CreatePostDto dto) {
         CreatePostResponseDto responseDto = postService.createPost(dto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
-
     }
 
     @DeleteMapping("/{id}")
@@ -32,3 +27,5 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
+
+

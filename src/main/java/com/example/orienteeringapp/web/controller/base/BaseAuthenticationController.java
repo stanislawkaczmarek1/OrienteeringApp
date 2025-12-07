@@ -1,20 +1,16 @@
-package com.example.orienteeringapp.web.controller;
+package com.example.orienteeringapp.web.controller.base;
 
 import com.example.orienteeringapp.application.dto.*;
 import com.example.orienteeringapp.application.service.AuthenticationService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/auth")
-@Tag(name = "Authentication")
-public class AuthenticationController {
+public abstract class BaseAuthenticationController {
 
-    private final AuthenticationService authenticationService;
+    protected final AuthenticationService authenticationService;
 
-    public AuthenticationController(AuthenticationService authenticationService) {
+    protected BaseAuthenticationController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
     }
 
@@ -38,3 +34,5 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.refreshAccessToken(request.getRefreshToken()));
     }
 }
+
+

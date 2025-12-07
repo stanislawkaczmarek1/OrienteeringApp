@@ -1,13 +1,12 @@
-package com.example.orienteeringapp.web.controller;
+package com.example.orienteeringapp.web.controller.base;
 
-import com.example.orienteeringapp.application.dto.GetUserResponseDto;
-import com.example.orienteeringapp.application.service.UserService;
 import com.example.orienteeringapp.application.dto.CreateUserDto;
 import com.example.orienteeringapp.application.dto.CreateUserResponseDto;
+import com.example.orienteeringapp.application.dto.GetUserResponseDto;
 import com.example.orienteeringapp.application.dto.UpdateUserDto;
+import com.example.orienteeringapp.application.service.UserService;
 import com.example.orienteeringapp.infrastructure.security.annotation.IsCurrentUser;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +14,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+public abstract class BaseUserController {
 
-@RestController
-@RequestMapping("/api/users")
-@Tag(name = "Users")
-public class UserController {
+    protected final UserService userService;
 
-    private final UserService userService;
-
-    public UserController(UserService userService) {
+    protected BaseUserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -31,8 +26,7 @@ public class UserController {
     @Deprecated
     public ResponseEntity<CreateUserResponseDto> createUser(@RequestBody CreateUserDto dto) {
         CreateUserResponseDto responseDto = userService.createUser(dto);
-        return  new ResponseEntity<>(responseDto, HttpStatus.CREATED);
-
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/me")
@@ -69,3 +63,5 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 }
+
+

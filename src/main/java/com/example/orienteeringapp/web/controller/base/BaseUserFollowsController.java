@@ -1,28 +1,24 @@
-package com.example.orienteeringapp.web.controller;
+package com.example.orienteeringapp.web.controller.base;
 
 import com.example.orienteeringapp.application.dto.CreateUserFollowsDto;
 import com.example.orienteeringapp.application.dto.CreateUserFollowsResponseDto;
 import com.example.orienteeringapp.application.service.UserFollowsService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/user-follows")
-@Tag(name = "UserFollows")
-public class UserFollowsController {
-    private final UserFollowsService userFollowsService;
+public abstract class BaseUserFollowsController {
 
-    public UserFollowsController(UserFollowsService userFollowsService) {
+    protected final UserFollowsService userFollowsService;
+
+    protected BaseUserFollowsController(UserFollowsService userFollowsService) {
         this.userFollowsService = userFollowsService;
     }
 
     @PostMapping
-    public ResponseEntity<CreateUserFollowsResponseDto> createUser(@RequestBody CreateUserFollowsDto dto) {
+    public ResponseEntity<CreateUserFollowsResponseDto> createUserFollows(@RequestBody CreateUserFollowsDto dto) {
         CreateUserFollowsResponseDto responseDto = userFollowsService.createUserFollows(dto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
-
     }
 
     @DeleteMapping("/{followerId}/{followingId}")
@@ -32,5 +28,6 @@ public class UserFollowsController {
         userFollowsService.deleteUserFollows(followerId, followingId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }
+
+

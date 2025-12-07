@@ -1,28 +1,24 @@
-package com.example.orienteeringapp.web.controller;
+package com.example.orienteeringapp.web.controller.base;
 
-import com.example.orienteeringapp.application.service.MapService;
 import com.example.orienteeringapp.application.dto.CreateMapDto;
 import com.example.orienteeringapp.application.dto.CreateMapResponseDto;
 import com.example.orienteeringapp.application.dto.MapDto;
+import com.example.orienteeringapp.application.service.MapService;
 import com.example.orienteeringapp.infrastructure.security.annotation.IsMapOwner;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/maps")
-@Tag(name = "Maps")
 @SecurityRequirement(name = "Bearer Authentication")
 @PreAuthorize("isAuthenticated()")
-public class MapController {
+public abstract class BaseMapController {
 
-    private final MapService mapService;
+    protected final MapService mapService;
 
-    public MapController(MapService mapService) {
+    protected BaseMapController(MapService mapService) {
         this.mapService = mapService;
     }
 
@@ -34,8 +30,8 @@ public class MapController {
     @GetMapping("/{id}")
     public ResponseEntity<MapDto> getMap(@PathVariable Long id) {
         return mapService.getMap(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/user/{userId}")
@@ -50,3 +46,5 @@ public class MapController {
         return ResponseEntity.noContent().build();
     }
 }
+
+
