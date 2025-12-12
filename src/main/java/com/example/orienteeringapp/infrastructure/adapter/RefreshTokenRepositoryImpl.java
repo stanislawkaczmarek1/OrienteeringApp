@@ -8,6 +8,8 @@ import com.example.orienteeringapp.infrastructure.repository.JpaRefreshTokenRepo
 import com.example.orienteeringapp.infrastructure.repository.JpaUserRepository;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -65,6 +67,11 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
         entity.setToken(token.getToken());
         entity.setExpiryDate(token.getExpiryDate());
         return entity;
+    }
+
+    @Override
+    public void deleteAllExpiredSince(Instant now) {
+        jpaRefreshTokenRepository.deleteByExpiryDateBefore(now);
     }
 
     private RefreshToken toDomain(RefreshTokenEntity entity) {

@@ -1,7 +1,7 @@
 package com.example.orienteeringapp.application.service;
 
 import com.example.orienteeringapp.application.dto.CreateUserFollowsDto;
-import com.example.orienteeringapp.application.dto.CreateUserFollowsResponseDto;
+import com.example.orienteeringapp.application.dto.UserFollowsResponseDto;
 import com.example.orienteeringapp.domain.model.UserFollows;
 import com.example.orienteeringapp.domain.repository.UserFollowsRepository;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class UserFollowsService {
         this.repository = repository;
     }
 
-    public CreateUserFollowsResponseDto createUserFollows(CreateUserFollowsDto dto) {
+    public UserFollowsResponseDto createUserFollows(CreateUserFollowsDto dto) {
         UserFollows userFollows = new UserFollows(
                 dto.getFollowerId(),
                 dto.getFollowingId(),
@@ -23,14 +23,19 @@ public class UserFollowsService {
 
         UserFollows created = repository.save(userFollows);
 
-        return new CreateUserFollowsResponseDto(
+        return new UserFollowsResponseDto(
                 created.getFollowerId(),
-                created.getFollowingId()
+                created.getFollowingId(),
+                created.getCreatedAt()
         );
     }
 
 
     public void deleteUserFollows(Long followerId, Long followingId) {
         repository.deleteByFollowerIdAndFollowingId(followerId,followingId);
+    }
+
+    public boolean existsByFollowerIdAndFollowingId(Long followerId, Long followingId) {
+        return repository.existsByFollowerIdAndFollowingId(followerId, followingId);
     }
 }

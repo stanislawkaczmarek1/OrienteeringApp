@@ -9,6 +9,9 @@ import com.example.orienteeringapp.infrastructure.entity.UserEntity;
 import com.example.orienteeringapp.infrastructure.repository.JpaPostRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 @Component
 public class PostRepositoryImpl implements PostRepository {
     private final JpaPostRepository jpaPostRepository;
@@ -42,6 +45,21 @@ public class PostRepositoryImpl implements PostRepository {
 
         PostEntity saved = jpaPostRepository.save(entity);
         return postEntityToDomain(saved);
+    }
+
+    @Override
+    public Optional<Post> findById(Long id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Post> findByUserId(Long userId) {
+        return null;
+    }
+
+    @Override
+    public List<Post> findPublicByUserId(Long userId) {
+        return null;
     }
 
     @Override

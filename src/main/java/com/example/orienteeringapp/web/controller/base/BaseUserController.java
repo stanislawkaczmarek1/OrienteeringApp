@@ -1,7 +1,5 @@
 package com.example.orienteeringapp.web.controller.base;
 
-import com.example.orienteeringapp.application.dto.CreateUserDto;
-import com.example.orienteeringapp.application.dto.CreateUserResponseDto;
 import com.example.orienteeringapp.application.dto.GetUserResponseDto;
 import com.example.orienteeringapp.application.dto.UpdateUserDto;
 import com.example.orienteeringapp.application.service.UserService;
@@ -20,13 +18,6 @@ public abstract class BaseUserController {
 
     protected BaseUserController(UserService userService) {
         this.userService = userService;
-    }
-
-    @PostMapping
-    @Deprecated
-    public ResponseEntity<CreateUserResponseDto> createUser(@RequestBody CreateUserDto dto) {
-        CreateUserResponseDto responseDto = userService.createUser(dto);
-        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/me")

@@ -7,6 +7,9 @@ import com.example.orienteeringapp.infrastructure.entity.UserEntity;
 import com.example.orienteeringapp.infrastructure.repository.JpaFollowRequestRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 @Component
 public class FollowRequestRepositoryImpl implements FollowRequestRepository {
     private final JpaFollowRequestRepository jpaFollowRequestRepository;
@@ -36,6 +39,30 @@ public class FollowRequestRepositoryImpl implements FollowRequestRepository {
         return followRequestEntityToDomain(saved);
     }
 
+    @Override
+    public Optional<FollowRequest> findById(Long id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<FollowRequest> findPendingForTarget(Long targetId) {
+        return null;
+    }
+
+    @Override
+    public FollowRequest acceptRequest(Long requestId) {
+        return null;
+    }
+
+    @Override
+    public FollowRequest rejectRequest(Long requestId) {
+        return null;
+    }
+
+    @Override
+    public FollowRequest findByRequesterAndTarget(Long requesterId, Long targetId) {
+        return null;
+    }
 
     @Override
     public void deleteById(Long id) {

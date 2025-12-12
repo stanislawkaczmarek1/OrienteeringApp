@@ -1,7 +1,7 @@
 package com.example.orienteeringapp.web.controller.base;
 
 import com.example.orienteeringapp.application.dto.CreateUserFollowsDto;
-import com.example.orienteeringapp.application.dto.CreateUserFollowsResponseDto;
+import com.example.orienteeringapp.application.dto.UserFollowsResponseDto;
 import com.example.orienteeringapp.application.service.UserFollowsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +16,8 @@ public abstract class BaseUserFollowsController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateUserFollowsResponseDto> createUserFollows(@RequestBody CreateUserFollowsDto dto) {
-        CreateUserFollowsResponseDto responseDto = userFollowsService.createUserFollows(dto);
+    public ResponseEntity<UserFollowsResponseDto> createUserFollows(@RequestBody CreateUserFollowsDto dto) {
+        UserFollowsResponseDto responseDto = userFollowsService.createUserFollows(dto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
@@ -28,6 +28,15 @@ public abstract class BaseUserFollowsController {
         userFollowsService.deleteUserFollows(followerId, followingId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> exists(
+            @RequestParam Long followerId,
+            @RequestParam Long followingId) {
+        boolean exists = userFollowsService.existsByFollowerIdAndFollowingId(followerId, followingId);
+        return ResponseEntity.ok(exists);
+    }
+
 }
 
 

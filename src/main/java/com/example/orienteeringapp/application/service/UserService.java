@@ -1,7 +1,5 @@
 package com.example.orienteeringapp.application.service;
 
-import com.example.orienteeringapp.application.dto.CreateUserDto;
-import com.example.orienteeringapp.application.dto.CreateUserResponseDto;
 import com.example.orienteeringapp.application.dto.GetUserResponseDto;
 import com.example.orienteeringapp.application.dto.UpdateUserDto;
 import com.example.orienteeringapp.application.dto.UserDto;
@@ -20,25 +18,6 @@ public class UserService {
     public UserService(UserRepository repository, PasswordHasher passwordHasher) {
         this.repository = repository;
         this.passwordHasher = passwordHasher;
-    }
-
-    public CreateUserResponseDto createUser(CreateUserDto dto) {
-        String hashed = passwordHasher.hash(dto.getPassword());
-
-        User user = new User(
-                null,
-                dto.getUsername(),
-                dto.getFullName(),
-                dto.getEmail(),
-                dto.getPhoneNumber(),
-                hashed,
-                dto.isPrivate(),
-                null
-        );
-
-        User created = repository.save(user);
-
-        return new CreateUserResponseDto(created.getId());
     }
 
     public GetUserResponseDto getUser(Long id) {
@@ -129,15 +108,4 @@ public class UserService {
         repository.delete(id);
     }
 
-    private UserDto userToDto(User user) {
-        return new UserDto(
-                user.getId(),
-                user.getUsername(),
-                user.getFullName(),
-                user.getEmail(),
-                user.getPhoneNumber(),
-                user.isPrivate(),
-                user.getCreatedAt()
-        );
-    }
 }

@@ -37,6 +37,11 @@ public class UserFollowsRepositoryImpl implements UserFollowsRepository {
         jpaUserFollowsRepository.deleteByFollower_IdAndFollowing_Id(followerId, followingId);
     }
 
+    @Override
+    public boolean existsByFollowerIdAndFollowingId(Long followerId, Long followingId) {
+        return jpaUserFollowsRepository.existsByFollower_IdAndFollowing_Id(followerId, followingId);
+    }
+
     private UserFollows userFollowsEntityToDomain(UserFollowsEntity entity) {
         return new UserFollows(
                 entity.getFollower().getId(),

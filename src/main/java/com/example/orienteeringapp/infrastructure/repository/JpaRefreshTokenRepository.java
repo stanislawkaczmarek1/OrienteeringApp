@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.Instant;
 import java.util.Optional;
 
 public interface JpaRefreshTokenRepository extends JpaRepository<RefreshTokenEntity, Long> {
@@ -18,4 +19,6 @@ public interface JpaRefreshTokenRepository extends JpaRepository<RefreshTokenEnt
     Optional<RefreshTokenEntity> findByTokenWithLock(@Param("token") String token);
 
     void deleteByUser(UserEntity user);
+
+    void deleteByExpiryDateBefore(Instant now);
 }
