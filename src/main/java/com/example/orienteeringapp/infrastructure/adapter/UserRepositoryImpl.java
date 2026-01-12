@@ -6,6 +6,7 @@ import com.example.orienteeringapp.infrastructure.entity.UserEntity;
 import com.example.orienteeringapp.infrastructure.repository.JpaUserRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -78,6 +79,16 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void delete(Long id) {
         jpaUserRepository.deleteById(id);
+    }
+
+    @Override
+    public List<User> findByUsernameOrFullnameContaining(String query) {
+        List<UserEntity> entities = jpaUserRepository
+                .findByUsernameContainingIgnoreCaseOrFullNameContainingIgnoreCase(query, query);
+
+        return entities.stream()
+                .map(this::userEntityToDomain)
+                .toList();
     }
 
     private User userEntityToDomain(UserEntity entity) {

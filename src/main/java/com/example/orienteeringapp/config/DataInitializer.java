@@ -2,11 +2,17 @@ package com.example.orienteeringapp.config;
 
 import com.example.orienteeringapp.domain.model.Activity;
 import com.example.orienteeringapp.domain.model.Map;
+import com.example.orienteeringapp.domain.model.Post;
 import com.example.orienteeringapp.domain.model.User;
+import com.example.orienteeringapp.domain.model.enums.PostVisibility;
 import com.example.orienteeringapp.domain.repository.ActivityRepository;
 import com.example.orienteeringapp.domain.repository.MapRepository;
+import com.example.orienteeringapp.domain.repository.PostRepository;
 import com.example.orienteeringapp.domain.repository.UserRepository;
 import com.example.orienteeringapp.domain.service.PasswordHasher;
+import com.example.orienteeringapp.infrastructure.entity.ActivityEntity;
+import com.example.orienteeringapp.infrastructure.entity.PostEntity;
+import com.example.orienteeringapp.infrastructure.entity.UserEntity;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +33,8 @@ public class DataInitializer {
         UserRepository userRepository,
         PasswordHasher passwordHasher,
         MapRepository mapRepository,
-        ActivityRepository activityRepository
+        ActivityRepository activityRepository,
+        PostRepository postRepository
     ) {
         return args -> {
             User testUser;
@@ -49,6 +56,43 @@ public class DataInitializer {
                 System.out.println("Test user already exists");
             }
 
+            User testUser2;
+            if (userRepository.findByUsername("publicuser").isEmpty()) {
+                testUser2 = new User(
+                        null,
+                        "publicuser",
+                        "Public User",
+                        "public@example.com",
+                        "+1234567891",
+                        passwordHasher.hash("password123"),
+                        false,
+                        null
+                );
+                testUser2 = userRepository.save(testUser2);
+                System.out.println("Test user 2 created: publicuser/password123 (public)");
+            } else {
+                testUser2 = userRepository.findByUsername("publicuser").get();
+                System.out.println("Public user already exists");
+            }
+
+            User testUser3;
+            if (userRepository.findByUsername("privateuser").isEmpty()) {
+                testUser3 = new User(
+                        null,
+                        "privateuser",
+                        "Private User",
+                        "private@example.com",
+                        "+1234567892",
+                        passwordHasher.hash("password123"),
+                        true,
+                        null
+                );
+                testUser3 = userRepository.save(testUser3);
+                System.out.println("Test user 3 created: privateuser/password123 (private)");
+            } else {
+                testUser3 = userRepository.findByUsername("privateuser").get();
+                System.out.println("Private user already exists");
+            }
             // Check if maps already exist
             if (!mapRepository.findByUserId(testUser.getId()).isEmpty()) {
                 System.out.println("Test maps and activities already exist");
@@ -112,7 +156,8 @@ public class DataInitializer {
                 activity1Path,
                 null
             );
-            activityRepository.save(activity1);
+            Activity savedActivity1 = activityRepository.save(activity1);
+            System.out.println("Activity ID: " + savedActivity1.getId());
             System.out.println("Created activity: Morning Forest Run");
 
             // Create Activity #2 for Forest Trail
@@ -134,7 +179,7 @@ public class DataInitializer {
                 activity2Path,
                 null
             );
-            activityRepository.save(activity2);
+            Activity savedActivity2 = activityRepository.save(activity2);
             System.out.println("Created activity: Evening Training Session");
 
             // Create Activity #3 for Mountain Ridge
@@ -156,7 +201,7 @@ public class DataInitializer {
                 activity3Path,
                 null
             );
-            activityRepository.save(activity3);
+            Activity savedActivity3 = activityRepository.save(activity3);
             System.out.println("Created activity: Mountain Challenge");
 
             // Create Activity #4 for Mountain Ridge
@@ -176,7 +221,7 @@ public class DataInitializer {
                 activity4Path,
                 null
             );
-            activityRepository.save(activity4);
+            Activity savedActivity4 = activityRepository.save(activity4);
             System.out.println("Created activity: Speed Training");
 
             // Create Activity #5 for Mountain Ridge
@@ -199,7 +244,7 @@ public class DataInitializer {
                 activity5Path,
                 null
             );
-            activityRepository.save(activity5);
+            Activity savedActivity5 = activityRepository.save(activity5);
 
             // Create Map #3 - Wrocław City Orienteering
             Map.MapData wroclawMapData = new Map.MapData(List.of(
@@ -367,8 +412,9 @@ public class DataInitializer {
                 wroclawActivityPath,
                 null
             );
-            activityRepository.save(wroclawActivity);
+            Activity savedWrclawActivity=  activityRepository.save(wroclawActivity);
             System.out.println("Created activity: Wrocław Urban Adventure (" + wroclawActivityPath.size() + " path points, " + (seconds / 60) + " minutes)");
+
 
             // Update the final summary
             System.out.println("Test data initialization complete!");

@@ -113,6 +113,19 @@ public class UserService {
     }
 
     public List<SearchUserResponseDto> searchUsers(String query) {
-        return new ArrayList<>();
+
+        List<User> users = repository.findByUsernameOrFullnameContaining(query);
+
+        List<SearchUserResponseDto> responseDtos = new ArrayList<>();
+
+        for (User user : users) {
+            responseDtos.add(new SearchUserResponseDto(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getFullName()
+            ));
+        }
+
+        return responseDtos;
     }
 }

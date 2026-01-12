@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostService {
@@ -48,16 +49,77 @@ public class PostService {
     }
 
     public PostResponseDto getById(Long id) {
-        return null;
+        Optional<Post> optionalPost = repository.findById(id);
+        if (optionalPost.isPresent()) {
+            Post post = optionalPost.get();
+            return new PostResponseDto(
+                    post.getId(),
+                    post.getUserId(),
+                    post.getContent(),
+                    post.getMapId(),
+                    post.getActivityId(),
+                    post.getVisibility(),
+                    post.getCreatedAt()
+            );
+        } else {
+            throw new IllegalArgumentException("Post with this id does not exists");
+        }
     }
 
     public List<PostResponseDto> getByUserId(Long id) {
-        return new ArrayList<>();
+        List<Post> posts = repository.findByUserId(id);
+
+        List<PostResponseDto> responseDtos = new ArrayList<>();
+        for (Post post : posts) {
+            responseDtos.add(new PostResponseDto(
+                    post.getId(),
+                    post.getUserId(),
+                    post.getContent(),
+                    post.getMapId(),
+                    post.getActivityId(),
+                    post.getVisibility(),
+                    post.getCreatedAt()
+            ));
+        }
+
+        return responseDtos;
     }
     public List<PostResponseDto> getByUserId(String id) {
-        return new ArrayList<>();
+        Long userId = Long.parseLong(id);
+        List<Post> posts = repository.findByUserId(userId);
+
+        List<PostResponseDto> responseDtos = new ArrayList<>();
+        for (Post post : posts) {
+            responseDtos.add(new PostResponseDto(
+                    post.getId(),
+                    post.getUserId(),
+                    post.getContent(),
+                    post.getMapId(),
+                    post.getActivityId(),
+                    post.getVisibility(),
+                    post.getCreatedAt()
+            ));
+        }
+
+        return responseDtos;
     }
-    public List<PostResponseDto> getFeedForUser(String userId) {
-        return new ArrayList<>();
+    public List<PostResponseDto> getFeedForUser(String id) {
+        Long userId = Long.parseLong(id);
+        List<Post> posts = repository.findFeedForUser(userId);
+
+        List<PostResponseDto> responseDtos = new ArrayList<>();
+        for (Post post : posts) {
+            responseDtos.add(new PostResponseDto(
+                    post.getId(),
+                    post.getUserId(),
+                    post.getContent(),
+                    post.getMapId(),
+                    post.getActivityId(),
+                    post.getVisibility(),
+                    post.getCreatedAt()
+            ));
+        }
+
+        return responseDtos;
     }
 }

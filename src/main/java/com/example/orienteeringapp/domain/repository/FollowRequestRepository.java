@@ -8,8 +8,8 @@ import java.util.Optional;
 public interface FollowRequestRepository {
     FollowRequest save(FollowRequest followRequest);
     List<FollowRequest> findPendingForTarget(Long targetId);
-    FollowRequest acceptRequest(Long requestId);
-    FollowRequest rejectRequest(Long requestId);
+    void delete(Long requestId);
     Optional<FollowRequest> findByRequesterAndTarget(Long requesterId, Long targetId);
     void deleteByRequesterAndTarget(Long requesterId, Long targetId);
+    Optional<FollowRequest> findById(Long id);
 }
