@@ -121,7 +121,7 @@ public class AuthenticationService {
         User user = userRepository.findById(refreshToken.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        String newAccessToken = jwtService.generateToken(user.getUsername());
+        String newAccessToken = jwtService.generateToken(user.getUsername(), user.getId().toString());
 
         refreshTokenRepository.deleteById(refreshToken.getId());
 
@@ -140,7 +140,7 @@ public class AuthenticationService {
     protected AuthenticationResponseDto generateTokens(User user) {
         refreshTokenRepository.deleteByUserId(user.getId());
 
-        String jwtToken = jwtService.generateToken(user.getUsername());
+        String jwtToken = jwtService.generateToken(user.getUsername(), user.getId().toString());
         RefreshToken refreshToken = new RefreshToken(
                 null,
                 user.getId(),

@@ -22,9 +22,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        return User.builder()
-                .username(user.getUsername())
-                .password(user.getPasswordHash())
-                .build();
+        return new UserPrincipal(
+                user.getId().toString(),
+                user.getUsername(),
+                user.getPasswordHash()
+        );
     }
 }

@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreatePostDto {
     private Long id;
-    private Long userId;
     private String content;
     private Long mapId;
     private Long activityId;

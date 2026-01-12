@@ -26,16 +26,18 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(String username) {
-        return generateToken(new HashMap<>(), username);
+    public String generateToken(String username, String userId) {
+        return generateToken(new HashMap<>(), username, userId);
     }
 
-    public String generateToken(Map<String, Object> extraClaims, String username) {
+    public String generateToken(Map<String, Object> extraClaims, String username, String userId) {
+        extraClaims.put("userId", userId);
         return buildToken(extraClaims, username, jwtExpiration);
     }
 

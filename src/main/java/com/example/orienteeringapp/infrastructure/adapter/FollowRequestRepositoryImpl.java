@@ -21,7 +21,6 @@ public class FollowRequestRepositoryImpl implements FollowRequestRepository {
     @Override
     public FollowRequest save(FollowRequest followRequest) {
         FollowRequestEntity entity = new FollowRequestEntity();
-
         entity.setId(followRequest.getId());
 
         UserEntity requester = new UserEntity();
@@ -32,16 +31,9 @@ public class FollowRequestRepositoryImpl implements FollowRequestRepository {
         target.setId(followRequest.getTargetId());
         entity.setTarget(target);
 
-        entity.setStatus(followRequest.getStatus());
-
 
         FollowRequestEntity saved = jpaFollowRequestRepository.save(entity);
         return followRequestEntityToDomain(saved);
-    }
-
-    @Override
-    public Optional<FollowRequest> findById(Long id) {
-        return Optional.empty();
     }
 
     @Override
@@ -60,21 +52,18 @@ public class FollowRequestRepositoryImpl implements FollowRequestRepository {
     }
 
     @Override
-    public FollowRequest findByRequesterAndTarget(Long requesterId, Long targetId) {
-        return null;
+    public Optional<FollowRequest> findByRequesterAndTarget(Long requesterId, Long targetId) {
+        return Optional.empty();
     }
 
     @Override
-    public void deleteById(Long id) {
-        jpaFollowRequestRepository.deleteById(id);
-    }
+    public void deleteByRequesterAndTarget(Long requesterId, Long targetId) {}
 
     private FollowRequest followRequestEntityToDomain(FollowRequestEntity entity) {
         return new FollowRequest(
                 entity.getId(),
                 entity.getRequester().getId(),
                 entity.getTarget().getId(),
-                entity.getStatus(),
                 entity.getCreatedAt()
         );
     }

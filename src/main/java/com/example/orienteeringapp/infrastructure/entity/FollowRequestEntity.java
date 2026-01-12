@@ -1,6 +1,5 @@
 package com.example.orienteeringapp.infrastructure.entity;
 
-import com.example.orienteeringapp.domain.model.enums.FollowRequestStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,10 +29,6 @@ public class FollowRequestEntity {
     @JoinColumn(name = "target_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private UserEntity target;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private FollowRequestStatus status = FollowRequestStatus.PENDING;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

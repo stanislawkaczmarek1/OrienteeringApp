@@ -6,6 +6,9 @@ import com.example.orienteeringapp.domain.model.Post;
 import com.example.orienteeringapp.domain.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class PostService {
     private final PostRepository repository;
@@ -14,10 +17,11 @@ public class PostService {
         this.repository = repository;
     }
 
-    public PostResponseDto createPost(CreatePostDto dto) {
+    public PostResponseDto createPost(CreatePostDto dto, String userId) {
+        Long id = Long.parseLong(userId);
         Post post = new Post(
                 null,
-                dto.getUserId(),
+                id,
                 dto.getContent(),
                 dto.getMapId(),
                 dto.getActivityId(),
@@ -47,11 +51,13 @@ public class PostService {
         return null;
     }
 
-    public PostResponseDto getByUserId(Long id) {
-        return null;
+    public List<PostResponseDto> getByUserId(Long id) {
+        return new ArrayList<>();
     }
-
-    public PostResponseDto getPublicByUserId(Long id) {
-        return null;
+    public List<PostResponseDto> getByUserId(String id) {
+        return new ArrayList<>();
+    }
+    public List<PostResponseDto> getFeedForUser(String userId) {
+        return new ArrayList<>();
     }
 }

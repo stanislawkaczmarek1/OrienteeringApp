@@ -14,9 +14,10 @@ public class UserFollowsService {
         this.repository = repository;
     }
 
-    public UserFollowsResponseDto createUserFollows(CreateUserFollowsDto dto) {
+    public UserFollowsResponseDto createUserFollows(CreateUserFollowsDto dto, String followerId) {
+        Long id = Long.parseLong(followerId);
         UserFollows userFollows = new UserFollows(
-                dto.getFollowerId(),
+                id,
                 dto.getFollowingId(),
                 null
         );
@@ -31,11 +32,13 @@ public class UserFollowsService {
     }
 
 
-    public void deleteUserFollows(Long followerId, Long followingId) {
-        repository.deleteByFollowerIdAndFollowingId(followerId,followingId);
+    public void deleteUserFollows(String followerId, Long followingId) {
+        Long id = Long.parseLong(followerId);
+        repository.deleteByFollowerIdAndFollowingId(id,followingId);
     }
 
-    public boolean existsByFollowerIdAndFollowingId(Long followerId, Long followingId) {
-        return repository.existsByFollowerIdAndFollowingId(followerId, followingId);
+    public boolean existsByFollowerIdAndFollowingId(String followerId, Long followingId) {
+        Long id = Long.parseLong(followerId);
+        return repository.existsByFollowerIdAndFollowingId(id, followingId);
     }
 }

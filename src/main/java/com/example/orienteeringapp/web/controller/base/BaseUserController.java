@@ -1,6 +1,7 @@
 package com.example.orienteeringapp.web.controller.base;
 
 import com.example.orienteeringapp.application.dto.GetUserResponseDto;
+import com.example.orienteeringapp.application.dto.SearchUserResponseDto;
 import com.example.orienteeringapp.application.dto.UpdateUserDto;
 import com.example.orienteeringapp.application.service.UserService;
 import com.example.orienteeringapp.infrastructure.security.annotation.IsCurrentUser;
@@ -11,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 public abstract class BaseUserController {
 
@@ -52,6 +55,14 @@ public abstract class BaseUserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<SearchUserResponseDto>> search(
+            @RequestParam String query
+    ) {
+        List<SearchUserResponseDto> users = userService.searchUsers(query);
+        return ResponseEntity.ok(users);
     }
 }
 

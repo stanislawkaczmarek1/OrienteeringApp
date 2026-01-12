@@ -1,6 +1,7 @@
 package com.example.orienteeringapp.application.service;
 
 import com.example.orienteeringapp.application.dto.GetUserResponseDto;
+import com.example.orienteeringapp.application.dto.SearchUserResponseDto;
 import com.example.orienteeringapp.application.dto.UpdateUserDto;
 import com.example.orienteeringapp.application.dto.UserDto;
 import com.example.orienteeringapp.application.exception.UserNotFoundException;
@@ -8,6 +9,9 @@ import com.example.orienteeringapp.domain.model.User;
 import com.example.orienteeringapp.domain.repository.UserRepository;
 import com.example.orienteeringapp.domain.service.PasswordHasher;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -108,4 +112,7 @@ public class UserService {
         repository.delete(id);
     }
 
+    public List<SearchUserResponseDto> searchUsers(String query) {
+        return new ArrayList<>();
+    }
 }

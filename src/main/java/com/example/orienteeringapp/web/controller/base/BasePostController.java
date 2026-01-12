@@ -3,9 +3,13 @@ package com.example.orienteeringapp.web.controller.base;
 import com.example.orienteeringapp.application.dto.CreatePostDto;
 import com.example.orienteeringapp.application.dto.PostResponseDto;
 import com.example.orienteeringapp.application.service.PostService;
+import com.example.orienteeringapp.infrastructure.security.UserPrincipal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 public abstract class BasePostController {
 
@@ -16,8 +20,11 @@ public abstract class BasePostController {
     }
 
     @PostMapping
-    public ResponseEntity<PostResponseDto> createPost(@RequestBody CreatePostDto dto) {
-        PostResponseDto responseDto = postService.createPost(dto);
+    public ResponseEntity<PostResponseDto> createPost(
+            @RequestBody CreatePostDto dto,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        PostResponseDto responseDto = postService.createPost(dto, principal.getUserId());
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
@@ -27,7 +34,6 @@ public abstract class BasePostController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-
     //todo
     @GetMapping("/{id}")
     public ResponseEntity<PostResponseDto> getById(@PathVariable Long id) {
@@ -36,16 +42,25 @@ public abstract class BasePostController {
     }
     //todo
     @GetMapping("/users/{userId}")
-    public ResponseEntity<PostResponseDto> getByUserId(@PathVariable Long id) {
-        PostResponseDto responseDto = postService.getByUserId(id);
+    public ResponseEntity<List<PostResponseDto>> getByUserId(@PathVariable Long userId) {
+        List<PostResponseDto> responseDto = postService.getByUserId(userId);
         return ResponseEntity.ok(responseDto);
     }
+
     //todo
-    @GetMapping("/users/{userId}/public")
-    public ResponseEntity<PostResponseDto> getPublicByUserId(@PathVariable Long id) {
-        PostResponseDto responseDto = postService.getPublicByUserId(id);
+    @GetMapping("/me")
+    public ResponseEntity<List<PostResponseDto>> getMyPost(@AuthenticationPrincipal UserPrincipal principal) {
+        List<PostResponseDto> responseDto = postService.getByUserId(principal.getUserId());
         return ResponseEntity.ok(responseDto);
     }
+
+    //todo
+    @GetMapping("/feed")
+    public ResponseEntity<List<PostResponseDto>> getFeed(@AuthenticationPrincipal UserPrincipal principal) {
+        List<PostResponseDto> responseDto = postService.getFeedForUser(principal.getUserId());
+        return ResponseEntity.ok(responseDto);
+    }
+
 }
 
 

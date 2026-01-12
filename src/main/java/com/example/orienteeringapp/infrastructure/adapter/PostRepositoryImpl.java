@@ -53,12 +53,12 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public List<Post> findByUserId(Long userId) {
-        return null;
+    public List<Post> findFeedForUser(Long userId) {
+        return List.of();
     }
 
     @Override
-    public List<Post> findPublicByUserId(Long userId) {
+    public List<Post> findByUserId(Long userId) {
         return null;
     }
 

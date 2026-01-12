@@ -3,8 +3,10 @@ package com.example.orienteeringapp.web.controller.base;
 import com.example.orienteeringapp.application.dto.CreateFollowRequestDto;
 import com.example.orienteeringapp.application.dto.FollowRequestResponseDto;
 import com.example.orienteeringapp.application.service.FollowRequestService;
+import com.example.orienteeringapp.infrastructure.security.UserPrincipal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,25 +19,24 @@ public abstract class BaseFollowRequestController {
         this.followRequestService = followRequestService;
     }
 
-    //todo
-    @GetMapping("/{id}")
-    public ResponseEntity<FollowRequestResponseDto> getById(@PathVariable Long id) {
-        FollowRequestResponseDto responseDto = followRequestService.getById(id);
-        return ResponseEntity.ok(responseDto);
+    @PostMapping
+    public ResponseEntity<FollowRequestResponseDto> createFollowRequest(
+            @RequestBody CreateFollowRequestDto dto,
+            @AuthenticationPrincipal UserPrincipal principal) {
+
+        FollowRequestResponseDto responseDto = followRequestService.createFollowRequest(
+                dto,
+                principal.getUserId()
+        );
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     //todo
-    @GetMapping("/targets/{id}/pending")
-    public ResponseEntity<List<FollowRequestResponseDto>> getPendingForTarget(@PathVariable Long id) {
-        List<FollowRequestResponseDto> responseDto = followRequestService.getPendingForTarget(id);
-        return ResponseEntity.ok(responseDto);
-    }
-
-    //todo
-    @GetMapping("/requester/{requesterId}/target/{targetId}")
-    public ResponseEntity<FollowRequestResponseDto> getByRequesterAndTarget(@PathVariable Long requesterId,
-                                                                            @PathVariable Long targetId) {
-        FollowRequestResponseDto responseDto = followRequestService.getByRequesterAndTarget(requesterId, targetId);
+    @GetMapping("/pending")
+    public ResponseEntity<List<FollowRequestResponseDto>> getPendingForTarget(
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        List<FollowRequestResponseDto> responseDto = followRequestService.getPendingForTarget(principal.getUserId());
         return ResponseEntity.ok(responseDto);
     }
 
@@ -53,17 +54,15 @@ public abstract class BaseFollowRequestController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping
-    public ResponseEntity<FollowRequestResponseDto> createFollowRequest(@RequestBody CreateFollowRequestDto dto) {
-        FollowRequestResponseDto responseDto = followRequestService.createFollowRequest(dto);
-        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+    //todo
+    @GetMapping("/to/{targetId}/exists")
+    public ResponseEntity<Boolean> existsByRequesterAndTarget(
+            @PathVariable Long targetId,
+            @AuthenticationPrincipal UserPrincipal principal) {
+        Boolean responseDto = followRequestService.existsByRequesterAndTarget(principal.getUserId(), targetId);
+        return ResponseEntity.ok(responseDto);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFollowRequest(@PathVariable Long id) {
-        followRequestService.deleteFollowRequest(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
 }
 
 

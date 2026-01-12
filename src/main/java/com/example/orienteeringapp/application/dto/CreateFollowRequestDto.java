@@ -9,7 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateFollowRequestDto {
-    private Long id;
-    private Long requesterId;
     private Long targetId;
 }
