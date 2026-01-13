@@ -2,6 +2,7 @@ package com.example.orienteeringapp.web.controller.base;
 
 import com.example.orienteeringapp.application.dto.CreateFollowRequestDto;
 import com.example.orienteeringapp.application.dto.FollowRequestResponseDto;
+import com.example.orienteeringapp.application.dto.PendingFollowReqResponseDto;
 import com.example.orienteeringapp.application.service.FollowRequestService;
 import com.example.orienteeringapp.infrastructure.security.UserPrincipal;
 import org.springframework.http.HttpStatus;
@@ -33,10 +34,10 @@ public abstract class BaseFollowRequestController {
 
     //todo
     @GetMapping("/pending")
-    public ResponseEntity<List<FollowRequestResponseDto>> getPendingForTarget(
+    public ResponseEntity<List<PendingFollowReqResponseDto>> getPendingForTarget(
             @AuthenticationPrincipal UserPrincipal principal
     ) {
-        List<FollowRequestResponseDto> responseDto = followRequestService.getPendingForTarget(principal.getUserId());
+        List<PendingFollowReqResponseDto> responseDto = followRequestService.getPendingForTarget(principal.getUserId());
         return ResponseEntity.ok(responseDto);
     }
 
@@ -48,7 +49,7 @@ public abstract class BaseFollowRequestController {
     }
 
     //todo
-    @PostMapping("/{id}/reject")
+    @DeleteMapping("/{id}/reject")
     public ResponseEntity<Void> rejectRequest(@PathVariable Long id) {
         followRequestService.rejectRequest(id);
         return ResponseEntity.noContent().build();
@@ -62,6 +63,20 @@ public abstract class BaseFollowRequestController {
         Boolean responseDto = followRequestService.existsByRequesterAndTarget(principal.getUserId(), targetId);
         return ResponseEntity.ok(responseDto);
     }
+
+    @DeleteMapping("/to/{targetUserId}")
+    public ResponseEntity<Void> withdraw(
+            @PathVariable Long targetUserId,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        followRequestService.withdraw(
+                principal.getUserId(),
+                targetUserId
+        );
+        return ResponseEntity.noContent().build();
+    }
+
+
 
 }
 
