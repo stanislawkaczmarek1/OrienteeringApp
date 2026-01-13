@@ -36,21 +36,23 @@ public abstract class BasePostController {
 
     //todo
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponseDto> getById(@PathVariable Long id) {
-        PostResponseDto responseDto = postService.getById(id);
+    public ResponseEntity<PostResponseDto> getById(@PathVariable Long id,
+                                                   @AuthenticationPrincipal UserPrincipal principal) {
+        PostResponseDto responseDto = postService.getById(id, principal.getUserId());
         return ResponseEntity.ok(responseDto);
     }
     //todo
     @GetMapping("/users/{userId}")
-    public ResponseEntity<List<PostResponseDto>> getByUserId(@PathVariable Long userId) {
-        List<PostResponseDto> responseDto = postService.getByUserId(userId);
+    public ResponseEntity<List<PostResponseDto>> getByUserId(@PathVariable Long userId,
+                                                             @AuthenticationPrincipal UserPrincipal principal) {
+        List<PostResponseDto> responseDto = postService.getByUserId(userId, principal.getUserId());
         return ResponseEntity.ok(responseDto);
     }
 
     //todo
     @GetMapping("/me")
     public ResponseEntity<List<PostResponseDto>> getMyPost(@AuthenticationPrincipal UserPrincipal principal) {
-        List<PostResponseDto> responseDto = postService.getByUserId(principal.getUserId());
+        List<PostResponseDto> responseDto = postService.getMyPosts(principal.getUserId());
         return ResponseEntity.ok(responseDto);
     }
 
