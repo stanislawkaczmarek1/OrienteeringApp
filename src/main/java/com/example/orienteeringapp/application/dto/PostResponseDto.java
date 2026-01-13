@@ -18,4 +18,9 @@ public class PostResponseDto {
     private Long activityId;
     private PostVisibility visibility;
     private LocalDateTime createdAt;
+    private String title;
+    private String userFullName;
+    private String username;
+    private String distance;
+    private String duration;
 }

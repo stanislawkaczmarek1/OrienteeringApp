@@ -2,20 +2,29 @@ package com.example.orienteeringapp.application.service;
 
 import com.example.orienteeringapp.application.dto.CreatePostDto;
 import com.example.orienteeringapp.application.dto.PostResponseDto;
+import com.example.orienteeringapp.domain.model.Activity;
 import com.example.orienteeringapp.domain.model.Post;
+import com.example.orienteeringapp.domain.model.User;
+import com.example.orienteeringapp.domain.repository.ActivityRepository;
 import com.example.orienteeringapp.domain.repository.PostRepository;
+import com.example.orienteeringapp.domain.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PostService {
-    private final PostRepository repository;
+    private final PostRepository postRepository;
+    private final ActivityRepository activityRepository;
+    private final UserRepository userRepository;
 
-    public PostService(PostRepository repository) {
-        this.repository = repository;
+    public PostService(PostRepository postRepository, ActivityRepository activityRepository, UserRepository userRepository) {
+        this.postRepository = postRepository;
+        this.activityRepository = activityRepository;
+        this.userRepository = userRepository;
     }
 
     public PostResponseDto createPost(CreatePostDto dto, String userId) {
@@ -29,97 +38,113 @@ public class PostService {
                 dto.getVisibility(),
                 null
         );
+        Post createdPost = postRepository.save(post);
 
-        Post created = repository.save(post);
+        Optional<User> optionalUser = userRepository.findById(createdPost.getUserId());
+        if (optionalUser.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
 
-        return new PostResponseDto(
-                created.getId(),
-                created.getUserId(),
-                created.getContent(),
-                created.getMapId(),
-                created.getActivityId(),
-                created.getVisibility(),
-                created.getCreatedAt()
-        );
+        Optional<Activity> optionalActivity = activityRepository.findById(createdPost.getActivityId());
+
+        return mapModelsToDto(createdPost, optionalUser.get(), optionalActivity.orElse(null));
     }
 
 
     public void deletePost(Long id) {
-        repository.deleteById(id);
+        postRepository.deleteById(id);
     }
 
     public PostResponseDto getById(Long id) {
-        Optional<Post> optionalPost = repository.findById(id);
-        if (optionalPost.isPresent()) {
-            Post post = optionalPost.get();
-            return new PostResponseDto(
-                    post.getId(),
-                    post.getUserId(),
-                    post.getContent(),
-                    post.getMapId(),
-                    post.getActivityId(),
-                    post.getVisibility(),
-                    post.getCreatedAt()
-            );
-        } else {
+        Optional<Post> optionalPost = postRepository.findById(id);
+        if (optionalPost.isEmpty()) {
             throw new IllegalArgumentException("Post with this id does not exists");
         }
+        Post post = optionalPost.get();
+
+        Optional<User> optionalUser = userRepository.findById(post.getUserId());
+        if (optionalUser.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        Optional<Activity> optionalActivity = activityRepository.findById(post.getActivityId());
+
+        return mapModelsToDto(post, optionalUser.get(), optionalActivity.orElse(null));
     }
 
     public List<PostResponseDto> getByUserId(Long id) {
-        List<Post> posts = repository.findByUserId(id);
+        List<Post> posts = postRepository.findByUserId(id);
+
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
 
         List<PostResponseDto> responseDtos = new ArrayList<>();
         for (Post post : posts) {
-            responseDtos.add(new PostResponseDto(
-                    post.getId(),
-                    post.getUserId(),
-                    post.getContent(),
-                    post.getMapId(),
-                    post.getActivityId(),
-                    post.getVisibility(),
-                    post.getCreatedAt()
-            ));
+            Optional<Activity> optionalActivity = activityRepository.findById(post.getActivityId());
+            responseDtos.add(mapModelsToDto(post, optionalUser.get(), optionalActivity.orElse(null)));
         }
 
         return responseDtos;
     }
     public List<PostResponseDto> getByUserId(String id) {
         Long userId = Long.parseLong(id);
-        List<Post> posts = repository.findByUserId(userId);
+        List<Post> posts = postRepository.findByUserId(userId);
+
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
 
         List<PostResponseDto> responseDtos = new ArrayList<>();
         for (Post post : posts) {
-            responseDtos.add(new PostResponseDto(
-                    post.getId(),
-                    post.getUserId(),
-                    post.getContent(),
-                    post.getMapId(),
-                    post.getActivityId(),
-                    post.getVisibility(),
-                    post.getCreatedAt()
-            ));
+            Optional<Activity> optionalActivity = activityRepository.findById(post.getActivityId());
+            responseDtos.add(mapModelsToDto(post, optionalUser.get(), optionalActivity.orElse(null)));
         }
 
         return responseDtos;
     }
     public List<PostResponseDto> getFeedForUser(String id) {
         Long userId = Long.parseLong(id);
-        List<Post> posts = repository.findFeedForUser(userId);
+        List<Post> posts = postRepository.findFeedForUser(userId);
 
         List<PostResponseDto> responseDtos = new ArrayList<>();
         for (Post post : posts) {
-            responseDtos.add(new PostResponseDto(
-                    post.getId(),
-                    post.getUserId(),
-                    post.getContent(),
-                    post.getMapId(),
-                    post.getActivityId(),
-                    post.getVisibility(),
-                    post.getCreatedAt()
-            ));
+            Optional<User> optionalUser = userRepository.findById(post.getUserId());
+            if (optionalUser.isEmpty()) {
+                throw new IllegalArgumentException("User not found");
+            }
+            Optional<Activity> optionalActivity = activityRepository.findById(post.getActivityId());
+            responseDtos.add(mapModelsToDto(post, optionalUser.get(), optionalActivity.orElse(null)));
         }
 
         return responseDtos;
+    }
+
+    private PostResponseDto mapModelsToDto(Post post, User user,@Nullable Activity activity) {
+        String title = "";
+        String distance = "";
+        String duration = "";
+        if (activity != null) {
+            title = activity.getTitle();
+            distance = activity.getDistance().toEngineeringString();
+            duration = activity.getDuration().toString();
+        }
+
+        return new PostResponseDto(
+                post.getId(),
+                post.getUserId(),
+                post.getContent(),
+                post.getMapId(),
+                post.getActivityId(),
+                post.getVisibility(),
+                post.getCreatedAt(),
+                title,
+                user.getFullName(),
+                user.getUsername(),
+                distance,
+                duration
+        );
     }
 }

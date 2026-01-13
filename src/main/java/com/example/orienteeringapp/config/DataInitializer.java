@@ -415,11 +415,97 @@ public class DataInitializer {
             Activity savedWrclawActivity=  activityRepository.save(wroclawActivity);
             System.out.println("Created activity: Wrocław Urban Adventure (" + wroclawActivityPath.size() + " path points, " + (seconds / 60) + " minutes)");
 
+            // Create posts for testuser
+            if (postRepository.findByUserId(testUser.getId()).isEmpty()) {
+                Post post1 = new Post(
+                        null,
+                        testUser.getId(),
+                        "Amazing morning run through the forest! The trail was in perfect condition and I managed to find all control points without any major mistakes. The weather was cool and crisp - ideal for orienteering. 🏃‍♂️🌲",
+                        null,
+                        savedActivity1.getId(),
+                        PostVisibility.PUBLIC,
+                        null
+                );
+                postRepository.save(post1);
+                System.out.println("Created post 1 for testuser");
 
-            // Update the final summary
+                Post post2 = new Post(
+                        null,
+                        testUser.getId(),
+                        "Challenging mountain training today! The elevation changes really tested my stamina, but the views from the ridge were absolutely worth it. Need to work on my navigation in steep terrain though. 💪⛰️",
+                        null,
+                        savedActivity2.getId(),
+                        PostVisibility.PUBLIC,
+                        null
+                );
+                postRepository.save(post2);
+                System.out.println("Created post 2 for testuser");
+            } else {
+                System.out.println("Posts for testuser already exist");
+            }
+
+            // Create posts for publicuser
+            if (postRepository.findByUserId(testUser2.getId()).isEmpty()) {
+                Post publicPost1 = new Post(
+                        null,
+                        testUser2.getId(),
+                        "First time trying orienteering and I'm hooked! The forest trail was beginner-friendly and I loved the challenge of finding each control point. Can't wait to try more difficult courses! 🎯🌳",
+                        forestMap.getId(),
+                        savedActivity3.getId(),
+                        PostVisibility.PUBLIC,
+                        null
+                );
+                postRepository.save(publicPost1);
+                System.out.println("Created post 1 for publicuser");
+
+                Post publicPost2 = new Post(
+                        null,
+                        testUser2.getId(),
+                        "Just discovered this awesome Wrocław urban orienteering course! Planning to try it next weekend. Has anyone completed it? Would love to hear tips about navigation around Cathedral Island! 🏙️📍",
+                        null,
+                        savedActivity4.getId(),
+                        PostVisibility.FOLLOWERS,
+                        null
+                );
+                postRepository.save(publicPost2);
+                System.out.println("Created post 2 for publicuser");
+            } else {
+                System.out.println("Posts for publicuser already exist");
+            }
+
+            // Create posts for privateuser
+            if (postRepository.findByUserId(testUser3.getId()).isEmpty()) {
+                Post privatePost1 = new Post(
+                        null,
+                        testUser3.getId(),
+                        "Personal best on the mountain course today! Really happy with my navigation choices and managed to shave 5 minutes off my previous time. The key was taking the direct route at control point 3. 🎉",
+                        null,
+                        savedActivity5.getId(),
+                        PostVisibility.FOLLOWERS,
+                        null
+                );
+                postRepository.save(privatePost1);
+                System.out.println("Created post 1 for privateuser");
+
+                Post privatePost2 = new Post(
+                        null,
+                        testUser3.getId(),
+                        "Training log: Need to work on compass skills and pace judgment on uphill sections. Made some mistakes today but learned a lot. Will focus on these areas in next week's training sessions.",
+                        null,
+                        savedWrclawActivity.getId(),
+                        PostVisibility.FOLLOWERS,
+                        null
+                );
+                postRepository.save(privatePost2);
+                System.out.println("Created post 2 for privateuser");
+            } else {
+                System.out.println("Posts for privateuser already exist");
+            }
+
             System.out.println("Test data initialization complete!");
             System.out.println("- 3 maps created");
             System.out.println("- 6 activities created (2 for Forest Trail, 3 for Mountain Ridge, 1 for Wrocław)");
+            System.out.println("- 6 posts created");
         };
     }
 }

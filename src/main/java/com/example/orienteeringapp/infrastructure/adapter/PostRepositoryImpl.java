@@ -40,13 +40,17 @@ public class PostRepositoryImpl implements PostRepository {
 
         entity.setContent(post.getContent());
 
-        MapEntity map = jpaMapRepository.findById(post.getMapId())
-                .orElseThrow(() -> new RuntimeException("Map not found"));
-        entity.setMap(map);
+        if (post.getMapId() != null) {
+            MapEntity map = jpaMapRepository.findById(post.getMapId())
+                    .orElseThrow(() -> new RuntimeException("Map not found"));
+            entity.setMap(map);
+        }
 
-        ActivityEntity activity = jpaActivityRepository.findById(post.getActivityId())
-                .orElseThrow(() -> new RuntimeException("Activity not found"));
-        entity.setActivity(activity);
+        if (post.getActivityId() != null) {
+            ActivityEntity activity = jpaActivityRepository.findById(post.getActivityId())
+                    .orElseThrow(() -> new RuntimeException("Activity not found"));
+            entity.setActivity(activity);
+        }
 
         entity.setVisibility(post.getVisibility());
 
@@ -86,8 +90,8 @@ public class PostRepositoryImpl implements PostRepository {
                 entity.getId(),
                 entity.getUser().getId(),
                 entity.getContent(),
-                entity.getMap().getId(),
-                entity.getActivity().getId(),
+                entity.getMap() != null ? entity.getMap().getId() : null,
+                entity.getActivity() != null ? entity.getActivity().getId() : null,
                 entity.getVisibility(),
                 entity.getCreatedAt()
         );
