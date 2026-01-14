@@ -34,6 +34,14 @@ public abstract class BaseMapController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}")
+    @IsMapOwner
+    public ResponseEntity<MapDto> updateMap(@PathVariable Long id, @RequestBody CreateMapDto dto) {
+        return mapService.updateMap(id, dto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/user/{userId}")
     public List<MapDto> getMapsByUserId(@PathVariable Long userId) {
         return mapService.getMapsByUserId(userId);

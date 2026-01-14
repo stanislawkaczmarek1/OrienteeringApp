@@ -49,6 +49,22 @@ public class MapService {
         repository.delete(id);
     }
 
+    public Optional<MapDto> updateMap(Long id, CreateMapDto dto) {
+        return repository.findById(id).map(existingMap -> {
+            Map updatedMap = new Map(
+                    existingMap.getId(),
+                    existingMap.getUserId(),
+                    dto.getName(),
+                    dto.getDescription(),
+                    dto.getLocation(),
+                    toDomainMapData(dto.getMapData()),
+                    existingMap.getCreatedAt()
+            );
+            Map saved = repository.save(updatedMap);
+            return toDto(saved);
+        });
+    }
+
     private MapDto toDto(Map map) {
         return new MapDto(
             map.getId(),

@@ -26,10 +26,17 @@ public class MapRepositoryImpl implements MapRepository {
 
     @Override
     public Map save(Map map) {
-        MapEntity entity = new MapEntity();
+        MapEntity entity;
+
+        if (map.getId() != null) {
+            entity = jpaMapRepository.findById(map.getId())
+                    .orElse(new MapEntity());
+        } else {
+            entity = new MapEntity();
+        }
 
         UserEntity user = jpaUserRepository.findById(map.getUserId())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         entity.setUser(user);
 
         entity.setName(map.getName());
@@ -49,8 +56,8 @@ public class MapRepositoryImpl implements MapRepository {
     @Override
     public List<Map> findByUserId(Long userId) {
         return jpaMapRepository.findByUserId(userId).stream()
-            .map(this::toDomainMap)
-            .collect(Collectors.toList());
+                .map(this::toDomainMap)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -60,20 +67,20 @@ public class MapRepositoryImpl implements MapRepository {
 
     private Map toDomainMap(MapEntity entity) {
         return new Map(
-            entity.getId(),
-            entity.getUser().getId(),
-            entity.getName(),
-            entity.getDescription(),
-            entity.getLocation(),
-            toDomainMapData(entity.getMapData()),
-            entity.getCreatedAt()
+                entity.getId(),
+                entity.getUser().getId(),
+                entity.getName(),
+                entity.getDescription(),
+                entity.getLocation(),
+                toDomainMapData(entity.getMapData()),
+                entity.getCreatedAt()
         );
     }
 
     private Map.MapData toDomainMapData(MapEntity.MapData entityMapData) {
         if (entityMapData == null) return new Map.MapData(List.of());
         return new Map.MapData(
-            ControlPointMapper.mapList(entityMapData.getControlPoints(), this::toDomainControlPoint)
+                ControlPointMapper.mapList(entityMapData.getControlPoints(), this::toDomainControlPoint)
         );
     }
 
@@ -85,7 +92,7 @@ public class MapRepositoryImpl implements MapRepository {
         MapEntity.MapData entityMapData = new MapEntity.MapData();
         if (domainMapData != null) {
             entityMapData.setControlPoints(
-                ControlPointMapper.mapList(domainMapData.getControlPoints(), this::toEntityControlPoint)
+                    ControlPointMapper.mapList(domainMapData.getControlPoints(), this::toEntityControlPoint)
             );
         }
         return entityMapData;

@@ -1,7 +1,7 @@
 package com.example.orienteeringapp.application.dto;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +28,7 @@ public class CreateActivityDto {
 
     private Duration duration;
 
-    @Positive(message = "Distance must be positive")
+    @PositiveOrZero(message = "Distance cannot be negative")
     private BigDecimal distance;
 
     @NotNull(message = "Path data is required")
