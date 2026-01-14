@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -150,9 +151,14 @@ public class PostService {
         Long ownerUserId = post.getUserId();
         PostVisibility visibility = post.getVisibility();
 
+        if (currentUserId == null || ownerUserId == null) {
+            return false;
+        }
+
         return switch (visibility) {
-            case FOLLOWERS -> userFollowsRepository.existsByFollowerIdAndFollowingId(currentUserId, ownerUserId);
-            case PRIVATE -> false;
+            case FOLLOWERS ->
+                    Objects.equals(ownerUserId, currentUserId) || userFollowsRepository.existsByFollowerIdAndFollowingId(currentUserId, ownerUserId);
+            case PRIVATE -> Objects.equals(ownerUserId, currentUserId);
             case PUBLIC -> true;
         };
     }
