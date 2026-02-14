@@ -14,8 +14,8 @@ It is implemented using Onion Architecture, ensuring a clear separation between 
 
 ## 🔗 **Related Repositories**
 
-- Mobile Application: https://github.com/jakubwesta/mobile-orienteering
-- Web Application: https://github.com/jakubwesta/mobile-orienteering-frontend
+- [Mobile Application](https://github.com/jakubwesta/mobile-orienteering)
+- [Web Application](https://github.com/jakubwesta/mobile-orienteering-frontend)
 
 ---
 
